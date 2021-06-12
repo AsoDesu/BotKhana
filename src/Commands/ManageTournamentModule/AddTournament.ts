@@ -11,18 +11,23 @@ import TournamentNotFound from "../../Utils/Embeds/Presets/TournamentNotFound";
 class AddTournament extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
 		var TournamentId = args[0];
+		if (isNaN(parseInt(TournamentId))) return ErrorEmbed("Incorrect Argument", "You need to provide a TournamentID.");
 		var Tournament = await bk.Tournament(args[0]);
 
 		if (Tournament == null) return TournamentNotFound();
 
 		if (msg.author.id != Tournament.owner && !(await isTournamentAdmin(msg.author.id, TournamentId)))
-			//return ErrorEmbed("Error", "Only Tournament Admins and the owner can do this.");
+			return ErrorEmbed("Error", "Only Tournament Admins and the owner can do this.");
 
-			var TournamentData = await TournamentManager.GetData(TournamentId);
+		var TournamentData = await TournamentManager.GetData(TournamentId);
 		if (TournamentData != null)
 			return ErrorEmbed("Tournament Already Linked", "This tournament has already been linked to another server. Please contact the bot staff if this is an error.");
 
-		var role = await msg.guild.roles.create({ data: { name: `${Tournament.name} Signup` } });
+		try {
+			var role = await msg.guild.roles.create({ data: { name: `${Tournament.name} Signup` } });
+		} catch {
+			return ErrorEmbed("Failed to create role.", "Failed to create a signup role, make sure the bot has perms to add role.");
+		}
 
 		TournamentManager.SetData(TournamentId, {
 			guildId: msg.guild.id,
