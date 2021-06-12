@@ -14,6 +14,9 @@ import OnGuildJoin from "./EventManagers/GuildJoin";
 // Presence
 import PresenceManager from "./Utils/PresenceManager";
 
+// WebLink
+import WebLink from "./Utils/WebLink";
+
 function GetCommandsInDir(dir: string) {
 	fs.readdirSync(dir, { withFileTypes: true, encoding: "utf-8" }).forEach((file) => {
 		if (file.isDirectory()) {
@@ -31,7 +34,6 @@ const Client = new Discord.Client();
 Client.on("message", (e) => MessageRecived(e));
 Client.on("guildCreate", (e) => OnGuildJoin(e));
 Client.on("guildMemberAdd", (e) => UserJoin(e));
-
 Client.on("ready", () => {
 	console.log(`Connected to discord, ${CommandManager.commands.length} commands.`);
 
@@ -41,5 +43,7 @@ Client.on("ready", () => {
 });
 
 Client.login(process.env.TOKEN);
+
+WebLink();
 
 export default () => Client;
