@@ -18,9 +18,10 @@ class MuteAll extends BaseCommand {
 	}
 
 	label = "unmuteall";
+	aliases = ["ua"];
 	description = "Unmute every member in your current Voice Channel except yourself";
 	RequiredPermission = "MUTE_MEMBERS" as PermissionResolvable;
-	Module = "Coordinator"
+	Module = "Coordinator";
 }
 
 CommandManager.registerCommand(new MuteAll());
