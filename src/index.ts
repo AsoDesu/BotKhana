@@ -5,17 +5,20 @@ import SignupManager from "./BeatKhanaApi/Manager/SignupManager";
 
 // Event
 import MessageRecived from "./EventManagers/MessageRecived";
+import UserJoin from "./EventManagers/UserJoin";
+import OnGuildJoin from "./EventManagers/GuildJoin";
+import OnGuildLeave from "./EventManagers/GuildLeave";
 
 // Command Manager
 import CommandManager from "./Commands/CommandManager";
-import UserJoin from "./EventManagers/UserJoin";
-import OnGuildJoin from "./EventManagers/GuildJoin";
 
 // Presence
 import PresenceManager from "./Utils/PresenceManager";
 
 // WebLink
 import WebLink from "./Utils/WebLink";
+import BotLogs from "./Utils/BotLogs/BotLogs";
+import Log from "./Utils/BotLogs/Log";
 
 function GetCommandsInDir(dir: string) {
 	fs.readdirSync(dir, { withFileTypes: true, encoding: "utf-8" }).forEach((file) => {
@@ -33,13 +36,14 @@ const Client = new Discord.Client();
 
 Client.on("message", (e) => MessageRecived(e));
 Client.on("guildCreate", (e) => OnGuildJoin(e));
+Client.on("guildDelete", (e) => OnGuildLeave(e));
 Client.on("guildMemberAdd", (e) => UserJoin(e));
-Client.on("ready", () => {
+Client.on("ready", async () => {
 	console.log(`Connected to discord, ${CommandManager.commands.length} commands.`);
-
 	PresenceManager.SetPresence();
-
 	SignupManager.InitalizeAll();
+	await BotLogs.InitManager();
+	Log("Connected to discord!", __filename);
 });
 
 Client.login(process.env.TOKEN);
