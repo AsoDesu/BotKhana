@@ -1,4 +1,5 @@
-import { Message, PermissionResolvable } from "discord.js";
+import { Message, MessageEmbed, PermissionResolvable } from "discord.js";
+import Log from "../Utils/BotLogs/Log";
 import ErrorEmbed from "../Utils/Embeds/ErrorEmbed";
 import WarningEmbed from "../Utils/Embeds/WarningEmbed";
 import BaseCommand from "./BaseCommand";
@@ -27,6 +28,7 @@ async function executeCommand(label: string, msg: Message, args: string[]) {
 	if (result) {
 		msg.channel.send(result);
 	}
+	Log(`${msg.author.username} ran command ${cmd.label}`, __filename);
 	return true;
 }
 
