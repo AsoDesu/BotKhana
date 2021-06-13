@@ -9,6 +9,7 @@ import CommandManager from "../CommandManager";
 
 class SyncCommand extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
+		if (isNaN(parseInt(args[0]))) return ErrorEmbed("Incorrect Argument", "You need to provide a TournamentID.");
 		var TournamentData = await TournamentManager.GetData(args[0]);
 		if (!TournamentData) return TournamentNotFound();
 		if (TournamentData.guildId != msg.guild.id) return ErrorEmbed("Linked to another server.", "This tournament has been linked to another discord server.");
@@ -22,7 +23,7 @@ class SyncCommand extends BaseCommand {
 	RequiredPermission = "MANAGE_GUILD" as PermissionResolvable;
 	Args = ["(Tournament ID)"];
 
-	Module = "BeatKhana"
+	Module = "BeatKhana";
 }
 
 CommandManager.registerCommand(new SyncCommand());

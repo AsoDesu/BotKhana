@@ -10,6 +10,7 @@ import CommandManager from "../CommandManager";
 
 class ManageTournament extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
+		if (isNaN(parseInt(args[0]))) return ErrorEmbed("Incorrect Argument", "You need to provide a TournamentID.");
 		var Tournament = await TournamentManager.GetData(args[0]);
 		if (Tournament == null) return ErrorEmbed("Tournament Not Linked", "This tournament has not been linked to a discord server yet.");
 		if (Tournament.guildId != msg.guild.id) return ErrorEmbed("Linked to another server.", "This tournament has been linked to another discord server.");
