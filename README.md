@@ -1,6 +1,7 @@
 # BotKhana
 
 A Beat Saber Tournament Manager and Coordinator Bot
+###### BotKhana is not affiliated with BeatKhana.
 
 [Invite Link](https://discord.com/api/oauth2/authorize?client_id=796371697083219968&permissions=298265712&scope=bot)
 
