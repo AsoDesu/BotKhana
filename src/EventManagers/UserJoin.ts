@@ -1,5 +1,5 @@
 import { GuildMember, PartialGuildMember } from "discord.js";
-import SignupManager from "../BeatKhanaApi/Manager/SignupManager";
+import SignupManager from "../api/BeatKhana/Manager/SignupManager";
 import TournamentManager from "../DatabaseManager/TournamentManager";
 
 async function UserJoin(e: PartialGuildMember | GuildMember) {

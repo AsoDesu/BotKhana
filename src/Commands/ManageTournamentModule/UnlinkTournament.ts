@@ -1,13 +1,13 @@
 import { Message, PermissionResolvable } from "discord.js";
 import BaseCommand from "../BaseCommand";
-import bk from "../../BeatKhanaApi/BK-Api";
+import bk from "../../api/BeatKhana/BK-Api";
 import ErrorEmbed from "../../Utils/Embeds/ErrorEmbed";
 import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
 import TournamentManager from "../../DatabaseManager/TournamentManager";
 import isTournamentAdmin from "../../Utils/IsTournamentAdmin";
 import CommandManager from "../CommandManager";
 import TournamentNotFound from "../../Utils/Embeds/Presets/TournamentNotFound";
-import SignupManager from "../../BeatKhanaApi/Manager/SignupManager";
+import SignupManager from "../../api/BeatKhana/Manager/SignupManager";
 
 class UnlinkTournament extends BaseCommand {
 	async execute(msg: Message, args: string[]) {

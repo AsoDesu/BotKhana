@@ -1,7 +1,7 @@
 import "dotenv/config";
 import Discord from "discord.js";
 import fs from "fs";
-import SignupManager from "./BeatKhanaApi/Manager/SignupManager";
+import SignupManager from "./api/BeatKhana/Manager/SignupManager";
 
 // Event
 import MessageRecived from "./EventManagers/MessageRecived";

@@ -1,6 +1,6 @@
 import { Message, MessageEmbed, MessageReaction, User } from "discord.js";
-import BKApi from "../../BeatKhanaApi/BK-Api";
-import { tournament, bracketMatch } from "../../BeatKhanaApi/BK-Api.d";
+import BKApi from "../../api/BeatKhana/BK-Api";
+import { tournament, bracketMatch } from "../../api/BeatKhana/BK-Api.d";
 import TournamentManager from "../../DatabaseManager/TournamentManager";
 import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
 import HexToDecimal from "../../Utils/HexToDecimal";

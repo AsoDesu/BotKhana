@@ -1,11 +1,11 @@
 import { Guild, GuildMember, MessageEmbed, TextChannel, User } from "discord.js";
-import TournamentManager, { TournamentData } from "../../DatabaseManager/TournamentManager";
-import Client from "../../index";
+import TournamentManager, { TournamentData } from "../../../DatabaseManager/TournamentManager";
+import Client from "../../../index";
 import BKApi from "../BK-Api";
 import { newParticipant } from "../BK-Api.d";
 import BK_WebSocket from "../BK-Websocket";
-import GetDefaultTrue from "../../Utils/GetDefaultTrue";
-import Log from "../../Utils/BotLogs/Log";
+import GetDefaultTrue from "../../../Utils/GetDefaultTrue";
+import Log from "../../../Utils/BotLogs/Log";
 
 interface TournamentWebsocket {
 	guildId: string;

@@ -1,5 +1,5 @@
 import { Message, PermissionResolvable } from "discord.js";
-import SignupManager from "../../BeatKhanaApi/Manager/SignupManager";
+import SignupManager from "../../api/BeatKhana/Manager/SignupManager";
 import TournamentManager from "../../DatabaseManager/TournamentManager";
 import ErrorEmbed from "../../Utils/Embeds/ErrorEmbed";
 import TournamentNotFound from "../../Utils/Embeds/Presets/TournamentNotFound";
