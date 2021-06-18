@@ -23,7 +23,6 @@ class ManageTournament extends BaseCommand {
 			case "signups-channel":
 				if (msg.mentions.channels.size == 0 || msg.mentions.channels.first().type != "text")
 					return ErrorEmbed("Incorrect Argument.", "You have to provide a text channel for that setting.");
-
 				data.signupsChannel = msg.mentions.channels.first().id;
 				break;
 			case "signup-role":

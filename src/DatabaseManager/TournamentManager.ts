@@ -4,13 +4,9 @@ import { firestore } from "firebase-admin";
 interface TournamentData {
 	guildId?: string;
 	signupRole?: string;
-	coordinatorRole?: string;
 	signupsChannel?: string;
-	qualifersChannel?: string;
-	tournamentAssistant?: {
-		ip?: string;
-		password?: string;
-	};
+	syncSignups?: boolean;
+	showComment?: boolean;
 	tournamentId?: string;
 	tournamentName?: string;
 }
