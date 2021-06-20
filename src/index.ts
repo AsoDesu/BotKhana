@@ -19,6 +19,7 @@ import PresenceManager from "./Utils/PresenceManager";
 import WebLink from "./Utils/WebLink";
 import BotLogs from "./Utils/BotLogs/BotLogs";
 import Log from "./Utils/BotLogs/Log";
+import TournamentManager from "./DatabaseManager/TournamentManager";
 
 function GetCommandsInDir(dir: string) {
 	fs.readdirSync(dir, { withFileTypes: true, encoding: "utf-8" }).forEach((file) => {
@@ -41,7 +42,10 @@ Client.on("guildMemberAdd", (e) => UserJoin(e));
 Client.on("ready", async () => {
 	console.log(`Connected to discord, ${CommandManager.commands.length} commands.`);
 	PresenceManager.SetPresence();
-	SignupManager.InitalizeAll();
+
+	let Tournaments = await TournamentManager.GetAllTournaments();
+	SignupManager.InitalizeAll(Tournaments);
+
 	await BotLogs.InitManager();
 	Log("Connected to discord!", __filename);
 });

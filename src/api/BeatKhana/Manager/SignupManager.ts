@@ -96,8 +96,7 @@ async function SendSignupEmbed(TournamentData: TournamentData, Member: User, Gui
 	);
 }
 
-async function InitalizeAll() {
-	var Tournaments = await TournamentManager.GetAllTournaments();
+async function InitalizeAll(Tournaments: TournamentData[]) {
 	Tournaments.forEach((tournament) => {
 		RegisterWebSocket(tournament.tournamentId, tournament.guildId);
 	});
