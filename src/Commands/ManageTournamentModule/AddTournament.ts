@@ -7,6 +7,7 @@ import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
 import TournamentManager from "../../DatabaseManager/TournamentManager";
 import isTournamentAdmin from "../../Utils/IsTournamentAdmin";
 import TournamentNotFound from "../../Utils/Embeds/Presets/TournamentNotFound";
+import SignupManager from "../../api/BeatKhana/Manager/SignupManager";
 
 class AddTournament extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
@@ -35,6 +36,8 @@ class AddTournament extends BaseCommand {
 			tournamentId: TournamentId,
 			tournamentName: Tournament.name,
 		});
+
+		SignupManager.RegisterWebSocket(TournamentId, msg.guild.id)
 
 		return SuccessEmbed("Linked Tournament", `Successfully linked tournament '**${Tournament.name}**' to this server!\nSignup role: <@&${role.id}>`);
 	}

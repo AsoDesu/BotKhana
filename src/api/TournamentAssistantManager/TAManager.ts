@@ -48,8 +48,12 @@ class TAManager {
 
 		let Embed = new MessageEmbed({
 			title: "Match Created",
-			description: `${Coordinator.Coordinator.Name} Created a match with ${Match.Players.length} Players.`,
+			description: `${Coordinator.Coordinator.Name} Created a match with **${Match.Players.length}** Players.`,
 			color: "33A7FF",
+		});
+
+		Match.Players.forEach((p) => {
+			Embed.addField(p.Name, `[ScoreSaber](https://scoresaber.com/u/${p.UserId})`);
 		});
 
 		Channel.send(Embed).catch(() => {

@@ -19,6 +19,13 @@ export interface UpdatePacket extends Packet {
 	};
 }
 
+export interface DisconnectCoordinator extends UpdatePacket {
+	SpecificPacket?: {
+		Type?: 4;
+		ChangedObject?: Coordinator;
+	};
+}
+
 export interface ConnectCoordinator {
 	Size?: number;
 	SpecificPacketSize?: number;

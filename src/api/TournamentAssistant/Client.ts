@@ -1,7 +1,19 @@
 import { EventEmitter } from "events";
 import WebSocket from "ws";
-import { CoordinatorConnect, CoordinatorResponse, MatchCreate, MatchUpdate, Packet, PlayerCompleted, PlayerConnect, PlayerDisconnect, UpdatePacket } from "./Types/EventTypes";
+import {
+	CoordinatorConnect,
+	CoordinatorResponse,
+	DisconnectCoordinator,
+	MatchCreate,
+	MatchUpdate,
+	Packet,
+	PlayerCompleted,
+	PlayerConnect,
+	PlayerDisconnect,
+	UpdatePacket,
+} from "./Types/EventTypes";
 import ConnectCoordinator from "./Packets/ConnectCoordinator";
+import DisconnectCoordinatorPacket from "./Packets/DisconnectCoordinator";
 import { Coordinator, Match, Player, PlayerData, ServerState } from "./Types/Types";
 import VersionInfo from "./VersionInfo";
 
@@ -19,6 +31,8 @@ class Client extends EventEmitter {
 	public Matches: Match[] = [];
 
 	public CompletedPlayers: PlayerData[] = [];
+
+	private DisconnectCalls = 0;
 
 	constructor(ip: string, password?: string, name?: string) {
 		super();
@@ -83,6 +97,42 @@ class Client extends EventEmitter {
 		if (this.ws.readyState != this.ws.OPEN) return 0;
 		this.ws.send(JSON.stringify(data));
 		return 1;
+	}
+
+	public Disconnect() {
+		this.Coordinators.forEach((c) => {
+			if (c.Name.includes("BotKhana")) {
+				this.Send(
+					new DisconnectCoordinatorPacket({
+						SpecificPacket: {
+							ChangedObject: c,
+						},
+					} as DisconnectCoordinator)
+				);
+			}
+		});
+
+		this.ws.close();
+	}
+
+	public DisconnectExtras() {
+		if (this.DisconnectCalls >= 10) return;
+		let BotKhanas = this.Coordinators.filter((c) => c.Name.includes("BotKhana"));
+		BotKhanas.forEach((c) => {
+			this.Send(
+				new DisconnectCoordinatorPacket({
+					SpecificPacket: {
+						ChangedObject: c,
+					},
+				} as DisconnectCoordinator)
+			);
+		});
+
+		let AfterBotKhanas = this.Coordinators.filter((c) => c.Name.includes("BotKhana"));
+		if (AfterBotKhanas.length != 0) {
+			this.DisconnectCalls++;
+			this.DisconnectExtras();
+		}
 	}
 
 	private UpdatePacket(Packet: UpdatePacket) {

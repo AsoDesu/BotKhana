@@ -1,28 +1,25 @@
 import { Message, PermissionResolvable } from "discord.js";
-import { URL } from "url";
-import Client from "../../api/TournamentAssistant/Client";
 import TALinkManager from "../../api/TournamentAssistantManager/TALinkManager";
 import GuildManager from "../../DatabaseManager/GuildManager";
 import ErrorEmbed from "../../Utils/Embeds/ErrorEmbed";
 import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
-import WarningEmbed from "../../Utils/Embeds/WarningEmbed";
 import BaseCommand from "../BaseCommand";
 import CommandManager from "../CommandManager";
 
-class ConnectCommand extends BaseCommand {
+class ReconnectCommand extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
-		if (!args[0].includes(":")) return WarningEmbed("Incorrect Argument", "You need to provide a TA Overlay IP:Port, in the format `ip:port`, e.g. `ta.asodev.net:10157`");
+		let Guild = await GuildManager.Get(msg.guild.id);
 
-		let url;
-		try {
-			url = new URL("ws://" + args[0]);
-		} catch (_) {
-			return ErrorEmbed("Invalid URL", "That URL is invalid.");
+		if (!Guild.ta_ip) {
+			return ErrorEmbed("TA isn't linked", "TA isn't linked run ?connect (TA IP:PORT) [(PASSWORD)] to connect.");
 		}
 
-		if (TALinkManager.GetTA(msg.guild.id)) return ErrorEmbed("Already Connected To TA", "This server has already been connected to TA, do `?disconnect` to disconnect");
+		let TAManager = TALinkManager.GetTA(msg.guild.id);
+		if (TAManager) {
+			return ErrorEmbed("TA is already connected", "Run ?disconnect to disconnect.");
+		}
 
-		let Connection = TALinkManager.LinkTA(msg.guild, args[0], args[1]);
+		let Connection = TALinkManager.LinkTA(msg.guild, Guild.ta_ip, Guild.ta_password);
 
 		msg.channel.send("Connecting...");
 
@@ -45,13 +42,12 @@ class ConnectCommand extends BaseCommand {
 		});
 	}
 
-	label = "connect";
-	Args = ["(TournamentAssistant IP:PORT) [(Password)]"];
+	label = "reconnect";
+	RequiredPermission = "MUTE_MEMBERS" as PermissionResolvable;
+
+	description = "Reconnects to TA if the bot disconnects from your TA server";
+
 	Module = "Tournament Assistant";
-
-	description = "Links your discord server to a TA server";
-
-	RequiredPermission = "MANAGE_GUILD" as PermissionResolvable;
 }
 
-CommandManager.registerCommand(new ConnectCommand());
+CommandManager.registerCommand(new ReconnectCommand());
