@@ -132,10 +132,6 @@ async function SyncAll(Guild: Guild, TournamentData: TournamentData) {
 		});
 		if (!Member) return;
 
-		if (Member.roles.cache.has(TournamentData.signupRole)) {
-			return;
-		}
-
 		SyncedUsers++;
 		if ((await AddRole(Member, TournamentData.signupRole)) != 1) {
 			SyncedUsers--;
