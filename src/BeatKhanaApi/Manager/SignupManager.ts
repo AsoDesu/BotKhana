@@ -56,7 +56,14 @@ async function NewSignup(signup: newParticipant) {
 
 async function AddRole(Member: GuildMember, RoleId: string) {
 	var Role = Member.guild.roles.cache.find((r) => r.id == RoleId);
-	if (!Role) return -1;
+	if (!Role) {
+		let FetchedRole = await Member.guild.roles.fetch(RoleId).catch(() => {
+			return;
+		});
+		if (!FetchedRole) return -1;
+
+		Role = FetchedRole;
+	}
 
 	if (Member.roles.cache.has(Role.id)) return 0;
 	Member.roles.add(Role);
@@ -120,8 +127,14 @@ async function SyncAll(Guild: Guild, TournamentData: TournamentData) {
 	if (!Participants) return;
 
 	Participants.forEach(async (p) => {
-		var Member = Guild.members.cache.get(p.discordId);
+		var Member = await Guild.members.fetch(p.discordId).catch(() => {
+			return;
+		});
 		if (!Member) return;
+
+		if (Member.roles.cache.has(TournamentData.signupRole)) {
+			return;
+		}
 
 		SyncedUsers++;
 		if ((await AddRole(Member, TournamentData.signupRole)) != 1) {
