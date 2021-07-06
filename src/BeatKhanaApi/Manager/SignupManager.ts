@@ -58,6 +58,7 @@ async function AddRole(Member: GuildMember, RoleId: string) {
 	var Role = Member.guild.roles.cache.find((r) => r.id == RoleId);
 	if (!Role) {
 		let FetchedRole = await Member.guild.roles.fetch(RoleId).catch(() => {
+			console.log("Failed");
 			return;
 		});
 		if (!FetchedRole) return -1;
@@ -140,8 +141,7 @@ async function SyncAll(Guild: Guild, TournamentData: TournamentData) {
 
 		SendSignupEmbed(TournamentData, Member.user, Guild, { newParticipant: { comment: "", tournamentId: parseInt(TournamentData.tournamentId), userId: p.discordId } });
 	});
-
-	return SyncedUsers;
+	return;
 }
 
 export default {

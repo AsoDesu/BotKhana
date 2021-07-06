@@ -6,7 +6,7 @@ import NumberEmotes from "../../Utils/Emotes/NumberEmotes";
 
 class AddTournament extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
-		var Tournaments = await TournamentManager.GetAllTournaments();
+		var Tournaments = await TournamentManager.GetDataFromGuildId(msg.guild.id);
 
 		var desc = `You have ${Tournaments.length} tournaments linked.\n\n`;
 		Tournaments.forEach((t) => {

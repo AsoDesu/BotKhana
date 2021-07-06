@@ -15,7 +15,7 @@ class SyncCommand extends BaseCommand {
 		if (TournamentData.guildId != msg.guild.id) return ErrorEmbed("Linked to another server.", "This tournament has been linked to another discord server.");
 
 		let SyncedUsers = await SignupManager.SyncAll(msg.guild, TournamentData);
-		return SuccessEmbed("Synced Users", `Successfully synced ${SyncedUsers} user${SyncedUsers == 1 ? "" : "s"}`);
+		return SuccessEmbed("Synced Users", `Successfully synced users.`);
 	}
 
 	label = "sync";
