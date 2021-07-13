@@ -1,7 +1,6 @@
 # BotKhana
 
 A Beat Saber Tournament Manager and Coordinator Bot
-
 ###### BotKhana is not affiliated with BeatKhana.
 
 [Invite Link](https://discord.com/api/oauth2/authorize?client_id=796371697083219968&permissions=298265712&scope=bot)
@@ -12,8 +11,8 @@ A Beat Saber Tournament Manager and Coordinator Bot
 
 ##### Coordinator
 
--   `muteall/ma` - Mute every member in your current Voice Channel except yourself
--   `unmuteall/ua` - Unmute every member in your current Voice Channel except yourself
+-   `muteall` - Mute every member in your current Voice Channel except yourself
+-   `unmuteall` - Unmute every member in your current Voice Channel except yourself
 
 ##### Info
 

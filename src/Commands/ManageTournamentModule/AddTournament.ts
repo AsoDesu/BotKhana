@@ -7,11 +7,11 @@ import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
 import TournamentManager from "../../DatabaseManager/TournamentManager";
 import isTournamentAdmin from "../../Utils/IsTournamentAdmin";
 import TournamentNotFound from "../../Utils/Embeds/Presets/TournamentNotFound";
-import SignupManager from "../../api/BeatKhana/Manager/SignupManager";
 
 class AddTournament extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
 		var TournamentId = args[0];
+		let hasAccess = true;
 		if (isNaN(parseInt(TournamentId))) return ErrorEmbed("Incorrect Argument", "You need to provide a TournamentID.");
 		var Tournament = await bk.Tournament(args[0]);
 
@@ -30,6 +30,9 @@ class AddTournament extends BaseCommand {
 			return ErrorEmbed("Failed to create role.", "Failed to create a signup role, make sure the bot has perms to add role.");
 		}
 
+		let parts = bk.Participants(TournamentId);
+		if (!parts) hasAccess = false;
+
 		TournamentManager.SetData(TournamentId, {
 			guildId: msg.guild.id,
 			signupRole: role.id,
@@ -37,9 +40,10 @@ class AddTournament extends BaseCommand {
 			tournamentName: Tournament.name,
 		});
 
-		SignupManager.RegisterWebSocket(TournamentId, msg.guild.id)
-
-		return SuccessEmbed("Linked Tournament", `Successfully linked tournament '**${Tournament.name}**' to this server!\nSignup role: <@&${role.id}>`);
+		return SuccessEmbed(
+			"Linked Tournament",
+			`Successfully linked tournament '**${Tournament.name}**' to this server!\nSignup role: <@&${role.id}>\nDo ?faq for more help`
+		);
 	}
 
 	label = "addtournament";

@@ -5,7 +5,6 @@ import BKApi from "../BK-Api";
 import { newParticipant } from "../BK-Api.d";
 import BK_WebSocket from "../BK-Websocket";
 import GetDefaultTrue from "../../../Utils/GetDefaultTrue";
-import Log from "../../../Utils/BotLogs/Log";
 
 interface TournamentWebsocket {
 	guildId: string;
@@ -29,10 +28,6 @@ function RegisterWebSocket(TournamentId: string, GuildId: string) {
 
 	data.WebSocket.on("signup", async (signup) => {
 		NewSignup(signup);
-	});
-
-	data.WebSocket.on("close", () => {
-		Log("Disconnected from WebSocket for tournament with id: " + TournamentId, __filename);
 	});
 }
 
@@ -64,7 +59,15 @@ async function NewSignup(signup: newParticipant) {
 
 async function AddRole(Member: GuildMember, RoleId: string) {
 	var Role = Member.guild.roles.cache.find((r) => r.id == RoleId);
-	if (!Role) return -1;
+	if (!Role) {
+		let FetchedRole = await Member.guild.roles.fetch(RoleId).catch(() => {
+			console.log("Failed");
+			return;
+		});
+		if (!FetchedRole) return -1;
+
+		Role = FetchedRole;
+	}
 
 	if (Member.roles.cache.has(Role.id)) return 0;
 	Member.roles.add(Role);
@@ -96,7 +99,8 @@ async function SendSignupEmbed(TournamentData: TournamentData, Member: User, Gui
 	);
 }
 
-async function InitalizeAll(Tournaments: TournamentData[]) {
+async function InitalizeAll() {
+	var Tournaments = await TournamentManager.GetAllTournaments();
 	Tournaments.forEach((tournament) => {
 		RegisterWebSocket(tournament.tournamentId, tournament.guildId);
 	});
@@ -129,7 +133,9 @@ async function SyncAll(Guild: Guild, TournamentData: TournamentData) {
 	if (!Participants) return;
 
 	Participants.forEach(async (p) => {
-		var Member = Guild.members.cache.get(p.discordId);
+		var Member = await Guild.members.fetch(p.discordId).catch(() => {
+			return;
+		});
 		if (!Member) return;
 
 		SyncedUsers++;
@@ -140,8 +146,7 @@ async function SyncAll(Guild: Guild, TournamentData: TournamentData) {
 
 		SendSignupEmbed(TournamentData, Member.user, Guild, { newParticipant: { comment: "", tournamentId: parseInt(TournamentData.tournamentId), userId: p.discordId } });
 	});
-
-	return SyncedUsers;
+	return;
 }
 
 export default {

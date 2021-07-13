@@ -45,7 +45,7 @@ Client.on("ready", async () => {
 	PresenceManager.SetPresence();
 
 	let Tournaments = await TournamentManager.GetAllTournaments();
-	SignupManager.InitalizeAll(Tournaments);
+	SignupManager.InitalizeAll();
 	TALinkManager.InitalizeAll();
 
 	await BotLogs.InitManager();

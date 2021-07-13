@@ -64,7 +64,7 @@ function GenerateHelpEmbed(page: number, Modules: BaseCommandWithModuleNames[]) 
 		title: "BotKhana Commands",
 		description: `**${Module.module_name}**`,
 		footer: {
-			text: `Page: ${page + 1}/${Modules.length}`,
+			text: `Page: ${page + 1}/${Modules.length} | Run ?faq for more help`,
 		},
 		color: "33A7FF",
 	});
