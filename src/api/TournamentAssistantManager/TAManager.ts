@@ -70,13 +70,14 @@ class TAManager {
 			color: "33A7FF",
 		});
 		let SortedPlayers = Match.Players.sort((p1, p2) => {
-			return p1.Score - p2.Score;
+			return p2.Score - p1.Score;
 		});
 		let Description = "";
 
 		SortedPlayers.forEach((p) => {
-			Description = Description.concat(`#${SortedPlayers.indexOf(p) + 1} - ${p.Name} - \`${p.Score}\``);
+			Description = Description.concat(`#${SortedPlayers.indexOf(p) + 1} - ${p.Name} - \`${p.Score}\`\n`);
 		});
+		Embed.setDescription(Description);
 
 		Coordinator.Channel.send(Embed).catch(() => {
 			this.UnlinkCoordinator(Match.Leader.Id);
