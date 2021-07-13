@@ -18,6 +18,7 @@ class MuteAll extends BaseCommand {
 	}
 
 	label = "muteall";
+	aliases = ["ma"];
 	description = "Mute every member in your current Voice Channel except yourself";
 	RequiredPermission = "MUTE_MEMBERS" as PermissionResolvable;
 	Module = "Coordinator";

@@ -1,18 +1,23 @@
 import { Message, MessageEmbed, MessageReaction, User } from "discord.js";
-import BKApi from "../../BeatKhanaApi/BK-Api";
-import { tournament, bracketMatch } from "../../BeatKhanaApi/BK-Api.d";
+import BKApi from "../../api/BeatKhana/BK-Api";
+import { tournament, bracketMatch } from "../../api/BeatKhana/BK-Api.d";
 import TournamentManager from "../../DatabaseManager/TournamentManager";
 import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
 import HexToDecimal from "../../Utils/HexToDecimal";
 import BaseCommand from "../BaseCommand";
 import CommandManager from "../CommandManager";
 import numberEmotes from "../../Utils/Emotes/NumberEmotes";
+import WarningEmbed from "../../Utils/Embeds/WarningEmbed";
 
 type reaction = { emote: string; id: string };
 
 class NextMatch extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
 		var data = await TournamentManager.GetDataFromGuildId(msg.guild.id);
+
+		if (data.length == 0) {
+			return WarningEmbed("There are no tournaments here!", "There aren't any tournament linked to this server.");
+		}
 
 		if (data.length != 1) {
 			var reactions: reaction[] = [];
@@ -48,7 +53,7 @@ class NextMatch extends BaseCommand {
 	description = "Get your next match";
 	aliases = ["next"];
 
-	Module = "BeatKhana";
+	Module = "Players";
 }
 
 async function NextMatchEmbed(userId: string, TournamentId: string) {

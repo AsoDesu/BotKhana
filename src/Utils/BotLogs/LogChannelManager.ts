@@ -18,6 +18,15 @@ class LogChannelManager {
 				})
 			);
 		});
+
+		process.on("unhandledRejection", (r: Error, p) => {
+			this.LogChannel.send(
+				new MessageEmbed({
+					description: r.stack,
+					color: "ff3333",
+				})
+			);
+		});
 	}
 
 	public LogMessage(x: string, filename: string) {

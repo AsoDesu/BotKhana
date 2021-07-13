@@ -5,6 +5,7 @@ import TournamentManager, { TournamentData } from "../../DatabaseManager/Tournam
 import ErrorEmbed from "../../Utils/Embeds/ErrorEmbed";
 import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
 import WarningEmbed from "../../Utils/Embeds/WarningEmbed";
+import GetDefaultTrue from "../../Utils/GetDefaultTrue";
 import BaseCommand from "../BaseCommand";
 import CommandManager from "../CommandManager";
 
@@ -22,8 +23,30 @@ class ManageTournament extends BaseCommand {
 			case "signups-channel":
 				if (msg.mentions.channels.size == 0 || msg.mentions.channels.first().type != "text")
 					return ErrorEmbed("Incorrect Argument.", "You have to provide a text channel for that setting.");
-
 				data.signupsChannel = msg.mentions.channels.first().id;
+				break;
+			case "signup-role":
+				if (msg.mentions.roles.size < 1) return ErrorEmbed("Incorrect Argument.", "You have to provide a role for that setting.");
+
+				data.signupRole = msg.mentions.roles.first().id;
+				break;
+			case "sync-signups":
+				if (args[2] == "on") {
+					data.syncSignups = true;
+				} else if (args[2] == "off") {
+					data.syncSignups = false;
+				} else {
+					return ErrorEmbed("Incorrect Argument.", "You have to provide a `on/off` for that setting");
+				}
+				break;
+			case "show-comment":
+				if (args[2] == "on") {
+					data.showComment = true;
+				} else if (args[2] == "off") {
+					data.showComment = false;
+				} else {
+					return ErrorEmbed("Incorrect Argument.", "You have to provide a `on/off` for that setting");
+				}
 				break;
 			default:
 				return ErrorEmbed("Unknown Setting.", "That setting does not exist.");
@@ -38,6 +61,8 @@ class ManageTournament extends BaseCommand {
 
 	label = "settings";
 
+	aliases = ["s"];
+
 	Args = ["(Tournament ID) [(Setting)] [(Value)]"];
 	description = "Change a tournaments settings";
 	RequiredPermission = "MANAGE_GUILD" as PermissionResolvable;
@@ -51,7 +76,12 @@ function MenuEmbed(TournamentData: TournamentData, value: string, tournamentId: 
 		description: `To change a setting run \`?settings ${tournamentId} ${value} (Value)\``,
 	});
 
-	var settings = [{ name: "signups-channel", value: TournamentData.signupsChannel ? TournamentData.signupsChannel : "Not Set" }];
+	var settings = [
+		{ name: "signups-channel", value: TournamentData.signupsChannel ? TournamentData.signupsChannel : "Not Set" },
+		{ name: "signup-role", value: TournamentData.signupRole ? `<@&${TournamentData.signupRole}>` : "Not Set" },
+		{ name: "sync-signups", value: GetDefaultTrue(TournamentData.syncSignups) ? "On" : "Off" },
+		{ name: "show-comment", value: GetDefaultTrue(TournamentData.showComment) ? "On" : "Off" },
+	];
 
 	if (value != "") settings = settings.filter((s) => s.name == value);
 

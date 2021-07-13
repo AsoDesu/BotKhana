@@ -1,4 +1,4 @@
-import bk from "../BeatKhanaApi/BK-Api";
+import bk from "../api/BeatKhana/BK-Api";
 
 export default async function isTournamentAdmin(userId: string, TournamentId: string): Promise<boolean> {
 	var staff = await bk.Staff(TournamentId);

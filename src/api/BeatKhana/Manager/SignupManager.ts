@@ -1,9 +1,10 @@
 import { Guild, GuildMember, MessageEmbed, TextChannel, User } from "discord.js";
-import TournamentManager, { TournamentData } from "../../DatabaseManager/TournamentManager";
-import Client from "../../index";
+import TournamentManager, { TournamentData } from "../../../DatabaseManager/TournamentManager";
+import Client from "../../../index";
 import BKApi from "../BK-Api";
 import { newParticipant } from "../BK-Api.d";
 import BK_WebSocket from "../BK-Websocket";
+import GetDefaultTrue from "../../../Utils/GetDefaultTrue";
 
 interface TournamentWebsocket {
 	guildId: string;
@@ -40,6 +41,8 @@ function RemoveWebSocket(TournamentId: string) {
 async function NewSignup(signup: newParticipant) {
 	var client = Client();
 	var TournamentData = await TournamentManager.GetData(signup.newParticipant.tournamentId.toString());
+
+	if (!GetDefaultTrue(TournamentData.syncSignups)) return;
 
 	var Guild = client.guilds.cache.get(TournamentData.guildId);
 	if (!Guild) return;
@@ -85,7 +88,9 @@ async function SendSignupEmbed(TournamentData: TournamentData, Member: User, Gui
 			title: `${Member.username} Signed up`,
 			description: `[ScoreSaber](https://scoresaber.com/u/${User.ssId}) | [Twitch](https://twitch.tv/${User.twitchName})\n**Global Rank**: #${
 				User.globalRank
-			}\n**Regional Rank**: #${User.localRank} :flag_${User.country.toLowerCase()}:\n**Comment**: ${signup.newParticipant.comment}`,
+			}\n**Regional Rank**: #${User.localRank} :flag_${User.country.toLowerCase()}:${
+				TournamentData.showComment == null || TournamentData.showComment == true ? `\n**Comment**: ${signup.newParticipant.comment}` : ""
+			}`,
 			thumbnail: {
 				url: Member.avatarURL({ dynamic: true }),
 			},
