@@ -41,26 +41,30 @@ class NextMatch extends BaseCommand {
 			});
 			collector.on("collect", async (reaction: MessageReaction) => {
 				TournamentSelection.reactions.removeAll();
-				TournamentSelection.edit(await NextMatchEmbed(msg.author.id, reactions.find((r) => r.emote == reaction.emoji.name).id));
+				TournamentSelection.edit(await NextMatchEmbed(msg.author.id, reactions.find((r) => r.emote == reaction.emoji.name).id, args));
 				collector.stop();
 			});
 		} else {
-			return NextMatchEmbed(msg.author.id, data[0].tournamentId);
+			return NextMatchEmbed(msg.author.id, data[0].tournamentId, args);
 		}
 	}
 
 	label = "nextmatch";
 	description = "Get your next match";
 	aliases = ["next"];
+	Args = ["[(Name)]"];
+	IgnoreArgs = true;
 
 	Module = "Players";
 }
 
-async function NextMatchEmbed(userId: string, TournamentId: string) {
+async function NextMatchEmbed(userId: string, TournamentId: string, args: string[]) {
 	var bracket = await BKApi.Bracket(TournamentId);
+	var userMode = !(bracket[0].p1.name == null);
+	var id = !userMode && args[0] ? args[0] : userId;
 
 	// Get players matches and sort by time.
-	var matches = bracket.filter((m) => (m.p1.id == userId || m.p2.id == userId) && m.status != "complete");
+	var matches = bracket.filter((m) => (m.p1.id && m.p1.id.toLowerCase() == id) || (m.p2.id && m.p2.id.toLowerCase() == id && m.status != "complete"));
 	matches.sort((a: bracketMatch, b: bracketMatch) => {
 		return Date.parse(a.time) - Date.parse(b.time);
 	});
@@ -70,11 +74,18 @@ async function NextMatchEmbed(userId: string, TournamentId: string) {
 	}
 
 	var nextMatch = matches[0];
-	var p1 = await BKApi.User(nextMatch.p1.id);
-	var p2 = await BKApi.User(nextMatch.p2.id);
+	let desc = "";
+	if (userMode) {
+		var p1 = await BKApi.User(nextMatch.p1.id);
+		var p2 = await BKApi.User(nextMatch.p2.id);
+		desc = `**[${p1.name}](https://scoresaber.com/u/${p1.ssId})** vs **[${p2.name}](https://scoresaber.com/u/${p2.ssId})**`;
+	} else {
+		desc = `**${nextMatch.p1.id}** vs **${nextMatch.p2.id}**`;
+	}
+
 	return new MessageEmbed({
 		title: `Match ${nextMatch.matchNum + 1}`,
-		description: `**[${p1.name}](https://scoresaber.com/u/${p1.ssId})** vs **[${p2.name}](https://scoresaber.com/u/${p2.ssId})**`,
+		description: desc,
 		fields: [{ name: "Time", value: generateDate(nextMatch.time), inline: true }],
 		color: "cc34eb",
 	});

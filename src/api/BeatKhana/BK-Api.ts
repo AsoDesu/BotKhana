@@ -1,7 +1,7 @@
 import fetch from "got";
 var got = fetch.extend({
 	headers: {
-		cookie: "uId=s%3AULKy4PQYkDtaRClPBPuneOQDBGZEHykF.iY4N5cOzZ0rDc2L7p9aROhQa7S2ugXLQd1P1s%2BRO1WE",
+		Cookie: `uId=${process.env.BK_UID}`,
 	},
 });
 
