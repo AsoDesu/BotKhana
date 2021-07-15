@@ -19,7 +19,7 @@ async function executeCommand(label: string, msg: Message, args: string[]) {
 		return;
 	}
 
-	if (args.length < cmd.Args.length) {
+	if (args.length < cmd.Args.length && !cmd.IgnoreArgs) {
 		msg.channel.send(WarningEmbed("Incorrect Usage", `**Usage**: ?${cmd.label} ${cmd.Args.join(" ")}`));
 		return;
 	}

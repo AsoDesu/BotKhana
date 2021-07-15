@@ -12,6 +12,7 @@ class BaseCommand {
 
 	public RequiredPermission: PermissionResolvable;
 	public Args: string[] = [];
+	public IgnoreArgs: boolean = false;
 
 	public description: string = "No Description Provided.";
 	public usage: string = `No Usage Provided.`;
