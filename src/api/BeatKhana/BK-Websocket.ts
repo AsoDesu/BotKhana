@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
 import WebSocket from "ws";
+import Log from "../../Utils/BotLogs/Log";
 import { newParticipant } from "./BK-Api.d";
 
 class BeatKhanaWebsocket extends EventEmitter {
@@ -12,6 +13,7 @@ class BeatKhanaWebsocket extends EventEmitter {
 		this.connection = new WebSocket("wss://beatkhana.com/api/ws");
 
 		this.connection.addEventListener("close", () => {
+			Log(`Disconnected from BeatKhana WS`, __filename);
 			this.emit("close");
 		});
 
