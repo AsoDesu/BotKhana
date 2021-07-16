@@ -5,6 +5,7 @@ import BKApi from "../BK-Api";
 import { newParticipant } from "../BK-Api.d";
 import BK_WebSocket from "../BK-Websocket";
 import GetDefaultTrue from "../../../Utils/GetDefaultTrue";
+import Log from "../../../Utils/BotLogs/Log";
 
 interface TournamentWebsocket {
 	guildId: string;
@@ -23,10 +24,12 @@ function RegisterWebSocket(TournamentId: string, GuildId: string) {
 	TournamentWebscokets.push(data);
 
 	data.WebSocket.on("error", () => {
+		Log(`WebSocket on tournament ${TournamentId} had an error`, __filename);
 		return -1;
 	});
 
 	data.WebSocket.on("signup", async (signup) => {
+		Log(`${signup.newParticipant.userId} Signed up to ${signup.newParticipant.tournamentId}`, __filename);
 		NewSignup(signup);
 	});
 }
@@ -48,6 +51,7 @@ async function NewSignup(signup: newParticipant) {
 	if (!Guild) return;
 
 	var Member = await Guild.members.fetch(signup.newParticipant.userId).catch(() => {
+		Log(`Failed to get user ${signup.newParticipant.userId}, from discord, tournament: ${signup.newParticipant.tournamentId}`, __filename);
 		return;
 	});
 	if (!Member) return;
@@ -64,24 +68,30 @@ async function AddRole(Member: GuildMember, RoleId: string) {
 			console.log("Failed");
 			return;
 		});
-		if (!FetchedRole) return -1;
+		if (!FetchedRole) return;
 
 		Role = FetchedRole;
 	}
 
 	if (Member.roles.cache.has(Role.id)) return 0;
 	Member.roles.add(Role);
-	return 1;
+	return;
 }
 
 async function SendSignupEmbed(TournamentData: TournamentData, Member: User, Guild: Guild, signup: newParticipant) {
 	if (!TournamentData.signupsChannel) return;
 
 	var SignupChannel = Guild.channels.cache.get(TournamentData.signupsChannel);
-	if (!SignupChannel) return;
+	if (!SignupChannel) {
+		Log(`Failed to get signup channel for tournament ${signup.newParticipant.tournamentId}`, __filename);
+		return;
+	}
 
 	var User = await BKApi.User(signup.newParticipant.userId);
-	if (!User) return;
+	if (!User) {
+		Log(`Failed to get user ${signup.newParticipant.userId}, for tournament ${signup.newParticipant.tournamentId}`, __filename);
+		return;
+	}
 
 	(SignupChannel as TextChannel).send(
 		new MessageEmbed({
@@ -114,9 +124,12 @@ async function SyncUser(UserId: string, Guild: Guild, TournamentData: Tournament
 	if (!Participants) return;
 
 	var User = Participants.find((u) => u.discordId == UserId);
-	if (!User) return;
+	if (!User) {
+		return;
+	}
 
 	var Member = await Guild.members.fetch(UserId).catch(() => {
+		Log(`Failed to get user ${UserId}`, __filename);
 		return;
 	});
 	if (!Member) return;
@@ -128,19 +141,18 @@ async function SyncUser(UserId: string, Guild: Guild, TournamentData: Tournament
 }
 
 async function SyncAll(Guild: Guild, TournamentData: TournamentData) {
-	var SyncedUsers = 0;
 	var Participants = await BKApi.Participants(TournamentData.tournamentId);
 	if (!Participants) return;
 
 	Participants.forEach(async (p) => {
 		var Member = await Guild.members.fetch(p.discordId).catch(() => {
+			Log(`Failed to get user ${p.name}`, __filename);
 			return;
 		});
 		if (!Member) return;
 
-		SyncedUsers++;
 		if ((await AddRole(Member, TournamentData.signupRole)) != 1) {
-			SyncedUsers--;
+			Log(`Didn't give ${p.name} signup role.`, __filename);
 			return;
 		}
 
