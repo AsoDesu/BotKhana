@@ -112,6 +112,7 @@ async function SendSignupEmbed(TournamentData: TournamentData, Member: User, Gui
 async function InitalizeAll() {
 	var Tournaments = await TournamentManager.GetAllTournaments();
 	Tournaments.forEach((tournament) => {
+		if (!Client().guilds.cache.get(tournament.guildId)) return;
 		RegisterWebSocket(tournament.tournamentId, tournament.guildId);
 	});
 	console.log(`Initalized ${Tournaments.length} Tournaments`);
@@ -168,4 +169,5 @@ export default {
 	RemoveWebSocket,
 	SyncUser,
 	SyncAll,
+	TournamentWebscokets,
 };
