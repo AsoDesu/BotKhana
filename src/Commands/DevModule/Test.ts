@@ -1,14 +1,15 @@
-import { Message } from "discord.js";
-import TALinkManager from "../../api/TournamentAssistantManager/TALinkManager";
-import DisconnectCoordinatorPacket from "../../api/TournamentAssistant/Packets/DisconnectCoordinator";
-import { DisconnectCoordinator } from "../../api/TournamentAssistant/Types/EventTypes";
-import ErrorEmbed from "../../Utils/Embeds/ErrorEmbed";
-import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
+import { MessageActionRow, MessageButton, MessageComponent, MessageComponentTypes, MessageMenu, MessageMenuOption } from "discord-buttons";
+import { Message, MessageEmbed } from "discord.js";
 import BaseCommand from "../BaseCommand";
 import CommandManager from "../CommandManager";
+import client from "../../index";
+import bk from "../../api/BeatKhana/BK-Api";
+import TALinkManager from "../../api/TournamentAssistantManager/TALinkManager";
 
 class test extends BaseCommand {
-	async execute(msg: Message, args: string[]) {}
+	async execute(msg: Message, args: string[]) {
+		return "nothing for you here....";
+	}
 
 	label = "test";
 	hidden = true;

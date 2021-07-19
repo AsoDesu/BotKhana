@@ -38,7 +38,6 @@ class ReconnectCommand extends BaseCommand {
 		Connection.Client.once("connect", () => {
 			//StatusMessage.edit();
 			msg.channel.send(SuccessEmbed("Successfully Connected to TA", `Successfully connected to TA server ${Connection.Client.ServerName}`));
-			GuildManager.Set(msg.guild.id, { ta_ip: args[0], ta_password: args[1] ? args[1] : "" });
 		});
 	}
 

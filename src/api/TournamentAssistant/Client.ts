@@ -85,6 +85,7 @@ class Client extends EventEmitter {
 					this.ServerName = data.SpecificPacket.State.ServerSettings.ServerName;
 
 					this.emit("connect", data.SpecificPacket);
+					this.Disconnect(true);
 					return;
 				case 4:
 					this.UpdatePacket(message as UpdatePacket);
@@ -99,7 +100,7 @@ class Client extends EventEmitter {
 		return 1;
 	}
 
-	public Disconnect() {
+	public Disconnect(keepws?: boolean) {
 		this.Coordinators.forEach((c) => {
 			if (c.Name.includes("BotKhana")) {
 				this.Send(
@@ -111,7 +112,7 @@ class Client extends EventEmitter {
 				);
 			}
 		});
-
+		if (keepws) return;
 		this.ws.close();
 	}
 
@@ -257,6 +258,7 @@ class Client extends EventEmitter {
 			match.Players.forEach((p) => {
 				this.PlayerUncomplete(p);
 			});
+			MatchCompletedPlayers = 0;
 		}
 	}
 
@@ -271,6 +273,11 @@ class Client extends EventEmitter {
 		let match = this.Matches.find((m) => m.Players.findIndex((p) => p.Id == player.Id) != -1);
 		if (match) return match;
 		return null;
+	}
+
+	// Inject Packet
+	public InjectPacket(packet: string) {
+		this.ws.emit("message", packet);
 	}
 
 	// Error Types

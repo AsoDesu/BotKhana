@@ -5,6 +5,7 @@ import TournamentManager, { TournamentData } from "../../DatabaseManager/Tournam
 import ErrorEmbed from "../../Utils/Embeds/ErrorEmbed";
 import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
 import WarningEmbed from "../../Utils/Embeds/WarningEmbed";
+import GetDefaultFalse from "../../Utils/GetDefaultFalse";
 import GetDefaultTrue from "../../Utils/GetDefaultTrue";
 import BaseCommand from "../BaseCommand";
 import CommandManager from "../CommandManager";
@@ -48,6 +49,17 @@ class ManageTournament extends BaseCommand {
 					return ErrorEmbed("Incorrect Argument.", "You have to provide a `on/off` for that setting");
 				}
 				break;
+			case "update-bracket-button":
+			case "update-bracket-btn":
+			case "update-bracket":
+				if (args[2] == "on") {
+					data.updateBracketButton = true;
+				} else if (args[2] == "off") {
+					data.updateBracketButton = false;
+				} else {
+					return ErrorEmbed("Incorrect Argument.", "You have to provide a `on/off` for that setting");
+				}
+				break;
 			default:
 				return ErrorEmbed("Unknown Setting.", "That setting does not exist.");
 		}
@@ -77,16 +89,17 @@ function MenuEmbed(TournamentData: TournamentData, value: string, tournamentId: 
 	});
 
 	var settings = [
-		{ name: "signups-channel", value: TournamentData.signupsChannel ? TournamentData.signupsChannel : "Not Set" },
+		{ name: "signups-channel", value: "<#" + (TournamentData.signupsChannel ? TournamentData.signupsChannel : "Not Set") + ">" },
 		{ name: "signup-role", value: TournamentData.signupRole ? `<@&${TournamentData.signupRole}>` : "Not Set" },
 		{ name: "sync-signups", value: GetDefaultTrue(TournamentData.syncSignups) ? "On" : "Off" },
 		{ name: "show-comment", value: GetDefaultTrue(TournamentData.showComment) ? "On" : "Off" },
+		{ name: "update-bracket", value: GetDefaultFalse(TournamentData.updateBracketButton) ? "On" : "Off" },
 	];
 
 	if (value != "") settings = settings.filter((s) => s.name == value);
 
 	settings.forEach((s) => {
-		Embed.addField(s.name, `**Current Value:** ${s.value}`, true);
+		Embed.addField(s.name, `${s.value}`, true);
 	});
 	return Embed;
 }

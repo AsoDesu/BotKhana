@@ -1,4 +1,4 @@
-interface tournament {
+export interface tournament {
 	tournamentId: number;
 	name: string;
 	image: string;
@@ -37,7 +37,7 @@ interface tournament {
 	ta_url: string;
 }
 
-interface user {
+export interface user {
 	discordId: string;
 	ssId: string;
 	name: string;
@@ -51,16 +51,16 @@ interface user {
 	pronoun: string;
 }
 
-interface staff_user extends user {
+export interface staff_user extends user {
 	roles: role[];
 }
 
-interface role {
+export interface role {
 	id: 1 | 2 | 3;
 	role: "Admin" | "Map Pool" | "Coordinator";
 }
 
-interface bracketMatch {
+export interface bracketMatch {
 	id: number;
 	status: string;
 	matchNum: number;
@@ -91,7 +91,7 @@ interface bracketMatch {
 	best_of: number;
 }
 
-interface pool {
+export interface pool {
 	id: number;
 	tournamentId: number;
 	poolName: string;
@@ -114,11 +114,11 @@ interface pool {
 	];
 }
 
-interface pools {
+export interface pools {
 	[key: string]: pool;
 }
 
-interface newParticipant {
+export interface newParticipant {
 	newParticipant: {
 		tournamentId: number;
 		comment: string;
@@ -126,7 +126,7 @@ interface newParticipant {
 	};
 }
 
-interface participant extends user {
+export interface participant extends user {
 	comment: string;
 	forfeit: number;
 	participantId: number;
@@ -137,4 +137,7 @@ interface participant extends user {
 	userId: string;
 }
 
-export type { role, staff_user, tournament, user, bracketMatch, pools, pool, newParticipant, participant };
+export interface BracketUpdatePayload {
+	p1Score: string | number;
+	p2Score: string | number;
+}

@@ -9,6 +9,7 @@ interface TournamentData {
 	showComment?: boolean;
 	tournamentId?: string;
 	tournamentName?: string;
+	updateBracketButton?: boolean;
 }
 
 async function SetData(id: string, data: TournamentData) {

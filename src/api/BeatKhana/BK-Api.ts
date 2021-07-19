@@ -8,6 +8,8 @@ var got = fetch.extend({
 import * as types from "./BK-Api.d";
 import BK_WebSocket from "./BK-Websocket";
 
+let users: types.user[];
+
 class BeatKhanaApi {
 	public async Tournament(id: string) {
 		var res = await got(`https://beatkhana.com/api/tournament/${id}/`).catch(() => {
@@ -49,12 +51,37 @@ class BeatKhanaApi {
 		var data = JSON.parse(res.body) as types.pools;
 		return Object.values(data) as types.pool[];
 	}
+
 	public async Participants(id: string) {
 		var res = await got(`https://beatkhana.com/api/tournament/${id}/participants`).catch(() => {
 			return { body: null };
 		});
 		if (res.body == null) return null;
 		return JSON.parse(res.body) as types.participant[];
+	}
+
+	public async AllUsers() {
+		if (users) {
+			return users;
+		}
+		var res = await got(`https://beatkhana.com/api/users`).catch(() => {
+			return { body: null };
+		});
+		if (res.body == null) return null;
+		let data = (await JSON.parse(res.body)) as types.user[];
+		users = data;
+		return data;
+	}
+
+	// Update/Set Stuff
+	public async SetBracketMatch(tournamentId: string, matchId: number, options: types.BracketUpdatePayload) {
+		var res = await got.put(`https://beatkhana.com/api/tournament/${tournamentId}/bracket/${matchId}`, {
+			body: JSON.stringify({ matchId, status: "update", ...options }),
+			headers: {
+				"content-type": "application/json",
+			},
+		});
+		return;
 	}
 }
 
