@@ -16,6 +16,6 @@ class PickNumber extends BaseCommand {
 	Args = ["(Number)"];
 	description = "Picks a random number between 0 and the number given";
 	RequiredPermission = "MUTE_MEMBERS" as PermissionResolvable;
-	Module = "Coordination";
+	Module = "Coordinator";
 }
 CommandManager.registerCommand(new PickNumber());
