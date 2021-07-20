@@ -11,8 +11,13 @@ A Beat Saber Tournament Manager and Coordinator Bot
 
 ##### Coordinator
 
--   `muteall` - Mute every member in your current Voice Channel except yourself
--   `unmuteall` - Unmute every member in your current Voice Channel except yourself
+-   `muteall/ma` - Mute every member in your current Voice Channel except yourself
+-   `unmuteall/ua` - Unmute every member in your current Voice Channel except yourself
+-   `multistream/ms` - Generates a Multistream link with the users in your current Voice Channel except yourself
+-   `coinflip/coin` - Flips a coin
+-   `pickuser/pu` - Picks a random user in your voice channel excluding yourself
+-   `picknumber/pn (number)` - Picks a random number between 0 and the number given
+-   `seperator/seperate/sep (optional text)` - Posts a line seperator to help organise match text channels. Includes text in seperator line if provided.
 
 ##### Info
 
