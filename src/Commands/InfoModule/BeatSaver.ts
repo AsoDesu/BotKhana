@@ -21,6 +21,7 @@ const diffEmotes = {
 
 type diffIndexType = "easy" | "normal" | "hard" | "expert" | "expertPlus";
 
+// Added by Sirspam with a little help from Aso
 class BeatSaver extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
 		try {
