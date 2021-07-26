@@ -23,8 +23,9 @@ type diffIndexType = "easy" | "normal" | "hard" | "expert" | "expertPlus";
 
 class BeatSaver extends BaseCommand {
 	async execute(msg: Message, args: string[]) {
-		var Map = await bs.getMapDetailsByKey(args[0]);
-		if (Map == null) {
+		try {
+			var Map = await bs.getMapDetailsByKey(args[0]);
+		} catch {
 			return ErrorEmbed("Map not found", "You should try e970 though");
 		}
 
