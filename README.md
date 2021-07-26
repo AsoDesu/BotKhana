@@ -1,6 +1,7 @@
 # BotKhana
 
 A Beat Saber Tournament Manager and Coordinator Bot
+
 ###### BotKhana is not affiliated with BeatKhana.
 
 [Invite Link](https://discord.com/api/oauth2/authorize?client_id=796371697083219968&permissions=298265712&scope=bot)
@@ -23,7 +24,9 @@ A Beat Saber Tournament Manager and Coordinator Bot
 
 -   `ping` - Get BotKhana's current ping
 -   `help` - The Help Menu Command
+-   `faq` - Additional help for certain common errors
 -   `invite` - Get the BotKhana invite link along with the support discord
+-   `map/bs/bsr (map key) [(difficulty)]` - Get map data from [beatsaver.com](https://beatsaver.com)
 
 ##### BeatKhana
 
