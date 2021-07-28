@@ -14,6 +14,8 @@ A Beat Saber Tournament Manager and Coordinator Bot
 
 -   `muteall/ma` - Mute every member in your current Voice Channel except yourself
 -   `unmuteall/ua` - Unmute every member in your current Voice Channel except yourself
+-   `movein/mi (mentions)` - Moves mentioned users into your voice channel
+-   `moveout/mo` - Moves users in your voice channel to the lobby voice channel
 -   `multistream/ms` - Generates a Multistream link with the users in your current Voice Channel except yourself
 -   `coinflip/coin` - Flips a coin
 -   `pickuser/pu` - Picks a random user in your voice channel excluding yourself
