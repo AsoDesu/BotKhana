@@ -12,7 +12,7 @@ class MoveOut extends BaseCommand {
 		}
 		let GuildData = await GuildManager.Get(msg.guild.id);
 		if (!GuildData.lobbyVC) {
-			return ErrorEmbed("LobbyVC not defined","You need to define the LobbyVC in the bot's settings")
+			return ErrorEmbed("LobbyVC not defined","You need to set the lobby vc. run the command ?setlobby")
 		}
 
 		for (let [id, member] of msg.member.voice.channel.members) {
