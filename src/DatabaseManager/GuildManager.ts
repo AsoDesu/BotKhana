@@ -6,6 +6,7 @@ export interface GuildData {
 	matchroomChannels?: string[];
 	guildId?: string;
 	lobbyVC?: string;
+	qualsChannel?: string;
 }
 
 async function Set(id: string, data: GuildData) {

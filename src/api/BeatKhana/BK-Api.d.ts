@@ -51,6 +51,12 @@ export interface user {
 	pronoun: string;
 }
 
+export interface self extends user {
+	roleIds: number[];
+	refresh_token: string;
+	roleNames: string[];
+}
+
 export interface staff_user extends user {
 	roles: role[];
 }

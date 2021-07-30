@@ -10,11 +10,12 @@ import {
 	PlayerCompleted,
 	PlayerConnect,
 	PlayerDisconnect,
+	QualiferResultPacket,
 	UpdatePacket,
 } from "./Types/EventTypes";
 import ConnectCoordinator from "./Packets/ConnectCoordinator";
 import DisconnectCoordinatorPacket from "./Packets/DisconnectCoordinator";
-import { Coordinator, Match, Player, PlayerData, ServerState } from "./Types/Types";
+import { Coordinator, Match, Player, PlayerData, Score, ServerState } from "./Types/Types";
 import VersionInfo from "./VersionInfo";
 
 class Client extends EventEmitter {
@@ -69,7 +70,6 @@ class Client extends EventEmitter {
 				return;
 			}
 			if (message.From != "00000000-0000-0000-0000-000000000000") return;
-
 			switch (message.Type) {
 				case 3:
 					let data = message as CoordinatorResponse;
@@ -90,6 +90,8 @@ class Client extends EventEmitter {
 				case 4:
 					this.UpdatePacket(message as UpdatePacket);
 					return;
+				case 15:
+					this.emit("qualifers_submit", (message as QualiferResultPacket).SpecificPacket.Score);
 			}
 		});
 	}
@@ -305,6 +307,8 @@ declare interface Client {
 
 	on(event: "coordinator_connect", listener: (coordinator: Coordinator) => void): this;
 	on(event: "coordinator_disconnect", listener: (coordinator: Coordinator) => void): this;
+
+	on(event: "qualifers_submit", listener: (score: Score) => void): this;
 }
 
 export default Client;

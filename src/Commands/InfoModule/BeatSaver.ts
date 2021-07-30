@@ -138,3 +138,7 @@ function DifficultyStats(diff: diffIndexType, Map: types.BeatSaverSong, difficul
 }
 
 CommandManager.registerCommand(new BeatSaver());
+
+export default {
+	bs,
+};

@@ -21,8 +21,8 @@ export interface ServerState {
 	};
 	Players: Player[];
 	Coordinators: Coordinator[];
-	Matches: [];
-	Events: [];
+	Matches: Match[];
+	Events: Event[];
 	KnownHosts: [
 		{
 			Name: string;
@@ -94,4 +94,44 @@ export interface PlayerData {
 	Beatmap: PlayerBeatmap;
 	Type: number;
 	Score: number;
+}
+
+export interface QualiferMap {
+	Beatmap: PlayerBeatmap;
+	PlayerSettings: {
+		PlayerHeight: number;
+		SfxVolume: number;
+		SaberTrailIntensity: number;
+		NoteJumpStartBeatOffset: number;
+		Options: number;
+	};
+	GameplayModifiers: {
+		Options: number;
+	};
+}
+
+export interface Event {
+	EventId: string;
+	Name: string;
+	Guild: {
+		Id: number;
+		Name: string;
+	};
+	InfoChannel: {
+		Id: number;
+		Name: string;
+	};
+	QualifierMaps: QualiferMap[];
+	SendScoresToInfoChannel: boolean;
+	Flags: number;
+}
+
+export interface Score {
+	EventId: string;
+	Parameters: QualiferMap;
+	UserId: number;
+	Username: string;
+	_Score: number;
+	FullCombo: false;
+	Color: string;
 }

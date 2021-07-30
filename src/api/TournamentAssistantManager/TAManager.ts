@@ -1,18 +1,24 @@
 import { MessageButton } from "discord-buttons";
 import { Message } from "discord.js";
 import { Guild, GuildMember, MessageEmbed, TextChannel } from "discord.js";
+import GuildManager from "../../DatabaseManager/GuildManager";
 import TournamentManager from "../../DatabaseManager/TournamentManager";
 import SuccessEmbed from "../../Utils/Embeds/SuccessEmbed";
 import GetDefaultFalse from "../../Utils/GetDefaultFalse";
 import BKApi from "../BeatKhana/BK-Api";
 import Client from "../TournamentAssistant/Client";
-import { Coordinator, Match, Player } from "../TournamentAssistant/Types/Types";
+import DiscordClient from "../../index";
+import { Coordinator, Match, Player, Score } from "../TournamentAssistant/Types/Types";
+import BeatSaver from "../../Commands/InfoModule/BeatSaver";
+import { numberWithCommas } from "../../Utils/NumberWithCommas";
+import { BeatSaverSong } from "beatsaver-api/lib/types/BeatSaverSong";
 
 class TAManager {
 	public Client: Client;
 	public Guild: Guild;
 
 	public LinkedCoordinators: LinkedCoordinator[] = [];
+	public MapCache: BeatSaverSong[] = [];
 
 	constructor(ip: string, password: string, Guild: Guild) {
 		this.Client = new Client(ip, password);
@@ -29,6 +35,10 @@ class TAManager {
 
 		this.Client.on("match_complete", (match) => {
 			this.SongCompleted(match);
+		});
+
+		this.Client.on("qualifers_submit", (Score) => {
+			this.QualierResult(Score);
 		});
 	}
 
@@ -158,6 +168,71 @@ class TAManager {
 			match,
 			usrIds: [p1Id, p2Id],
 		};
+	}
+
+	private async QualierResult(Score: Score) {
+		// Get Quals channel id from the Guild Data
+		let GuildData = await GuildManager.Get(this.Guild.id);
+		if (!GuildData.qualsChannel) return;
+
+		// Get the channel from discord, using the id
+		let QualsResultChannel = DiscordClient().channels.cache.get(GuildData.qualsChannel);
+		if (!QualsResultChannel) {
+			// Attempt to fetch the channel if it's not cached
+			try {
+				QualsResultChannel = await DiscordClient().channels.fetch(GuildData.qualsChannel);
+			} catch {
+				return;
+			}
+		}
+
+		// Store the hash
+		let hash = Score.Parameters.Beatmap.LevelId.replace("custom_level_", "");
+		// Get the beatmap from BeatSaver.com
+		let Beatmap = this.MapCache.find((m) => m.hash == hash);
+		if (!Beatmap) {
+			try {
+				Beatmap = await BeatSaver.bs.getMapDetailsByHash(hash);
+			} catch {
+				return;
+			}
+		}
+
+		// Code taken from https://github.com/AsoDesu/QualsWebsite/blob/main/js/src/index.ts
+		let notes = Beatmap.metadata.characteristics.find((c) => c.name == Score.Parameters.Beatmap.Characteristic.SerializedName).difficulties[
+			this.difficulty(Score.Parameters.Beatmap.Difficulty)
+		].notes;
+		// Calculate max score, thanks to.. someone from unnamed events for this formula!!
+		let maxscore = (notes - 13) * 920 + 4715;
+
+		// Generate embed, and send it off
+		(QualsResultChannel as TextChannel).send(
+			new MessageEmbed({
+				title: `${Score.Username} Completed ${Score.Parameters.Beatmap.Name}`,
+				description: `**Score:** ${numberWithCommas(Score._Score)}\n**Accuracy:** ${((Score._Score / maxscore) * 100).toPrecision(3)}% ${
+					Score.FullCombo ? "\n`Full Combo`" : ""
+				}`,
+				color: "#36ff33",
+				thumbnail: {
+					url: `https://scoresaber.com/imports/images/songs/${hash.toUpperCase()}.png`,
+				},
+			})
+		);
+	}
+
+	private difficulty(x: number) {
+		switch (x) {
+			case 0:
+				return "easy";
+			case 1:
+				return "normal";
+			case 2:
+				return "hard";
+			case 3:
+				return "expert";
+			case 4:
+				return "expertPlus";
+		}
 	}
 
 	// Status Types

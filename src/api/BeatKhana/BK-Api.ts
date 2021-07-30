@@ -74,14 +74,25 @@ class BeatKhanaApi {
 	}
 
 	// Update/Set Stuff
-	public async SetBracketMatch(tournamentId: string, matchId: number, options: types.BracketUpdatePayload) {
+	public async SetBracketMatch(tournamentId: string, matchId: number, options: types.BracketUpdatePayload, complete?: boolean) {
 		var res = await got.put(`https://beatkhana.com/api/tournament/${tournamentId}/bracket/${matchId}`, {
-			body: JSON.stringify({ matchId, status: "update", ...options }),
+			body: JSON.stringify({ matchId, status: complete ? "complete" : "update", ...options }),
 			headers: {
 				"content-type": "application/json",
 			},
 		});
 		return;
+	}
+
+	// Get Self
+	public async Self() {
+		try {
+			var res = await got(`https://beatkhana.com/api/user`);
+			if (res.body == null) return null;
+			return JSON.parse(res.body)[0] as types.self;
+		} catch {
+			return null;
+		}
 	}
 }
 

@@ -1,6 +1,6 @@
 import uuid from "uuid";
 import VersionInfo from "../VersionInfo";
-import { ServerState, Coordinator, Player, Match, PlayerBeatmap, PlayerData } from "./Types";
+import { ServerState, Coordinator, Player, Match, PlayerBeatmap, PlayerData, QualiferMap, Score } from "./Types";
 
 export interface Packet {
 	Size: number;
@@ -105,4 +105,12 @@ export interface CoordinatorConnect extends UpdatePacket {
 
 export interface CoordinatorDisconnect extends UpdatePacket {
 	SpecificPacket: { Type: 4; ChangedObject: Coordinator };
+}
+
+// EVENT PACKET TYPES!!
+export interface QualiferResultPacket extends Packet {
+	Type: 15;
+	SpecificPacket: {
+		Score: Score;
+	};
 }
