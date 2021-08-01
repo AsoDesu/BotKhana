@@ -8,7 +8,7 @@ class Ping extends BaseCommand {
 		var client = msg.client;
 		var ping = Date.now() - msg.createdTimestamp;
 		return new MessageEmbed({
-			title: "Ping!",
+			title: "Pong!",
 			description: `:ping_pong: ${client.user.username}'s ping is ${ping}ms.`,
 			color: GeneratePingValue(ping),
 		});
