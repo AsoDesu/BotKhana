@@ -17,6 +17,10 @@ class LinkCoordinator extends BaseCommand {
 			return ErrorEmbed("Coordinator Not Found", "We couldn't find that coordinator");
 		}
 
+		if (TALink.LinkedCoordinators.find((c) => c.User.id == msg.author.id)) {
+			return ErrorEmbed("Already Linked", "You've already linked yourself to a coordinator, run ?unlink, to unlink");
+		}
+
 		TALink.LinkCoordinator(msg.member, msg.channel as TextChannel, Coordinator.Id);
 		return SuccessEmbed("Linked Coordinator", `Linked Coordinator **${Coordinator.Name}** to User <@${msg.member.id}> and Matchroom <#${msg.channel.id}>`);
 	}

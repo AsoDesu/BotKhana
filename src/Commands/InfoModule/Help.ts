@@ -64,13 +64,13 @@ function GenerateHelpEmbed(page: number, Modules: BaseCommandWithModuleNames[]) 
 		title: "BotKhana Commands",
 		description: `**${Module.module_name}**`,
 		footer: {
-			text: `Page: ${page + 1}/${Modules.length} | Run ?faq for more help`,
+			text: `Page: ${page + 1}/${Modules.length} | Run ${process.env.PREFIX}faq for more help`,
 		},
 		color: "33A7FF",
 	});
 
 	Module.commands.forEach((cmd) => {
-		embed.addField(`?${cmd.label} ${cmd.Args.join(" ")}`, cmd.description);
+		embed.addField(`${process.env.PREFIX}${cmd.label} ${cmd.Args.join(" ")}`, cmd.description);
 	});
 
 	return embed;

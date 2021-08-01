@@ -1,7 +1,7 @@
 import Client from "../index";
 
 function SetPresence() {
-	Client().user.setActivity({ name: `${Client().guilds.cache.size} servers`, type: "WATCHING" });
+	Client().user.setActivity({ name: `BeatKhana.com`, type: "WATCHING" });
 }
 
 export default {

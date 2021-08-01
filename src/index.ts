@@ -1,5 +1,6 @@
 import "dotenv/config";
 import Discord from "discord.js";
+import DiscordButtons from "discord-buttons";
 import fs from "fs";
 import SignupManager from "./api/BeatKhana/Manager/SignupManager";
 
@@ -35,6 +36,7 @@ function GetCommandsInDir(dir: string) {
 GetCommandsInDir(__dirname + "/Commands");
 
 const Client = new Discord.Client();
+DiscordButtons(Client);
 
 Client.on("message", (e) => MessageRecived(e));
 Client.on("guildCreate", (e) => OnGuildJoin(e));
@@ -44,7 +46,6 @@ Client.on("ready", async () => {
 	console.log(`Connected to discord, ${CommandManager.commands.length} commands.`);
 	PresenceManager.SetPresence();
 
-	let Tournaments = await TournamentManager.GetAllTournaments();
 	SignupManager.InitalizeAll();
 	TALinkManager.InitalizeAll();
 

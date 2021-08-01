@@ -15,7 +15,7 @@ async function executeCommand(label: string, msg: Message, args: string[]) {
 	if (!cmd) return false;
 
 	if (!msg.member.hasPermission(cmd.RequiredPermission as PermissionResolvable)) {
-		msg.channel.send(ErrorEmbed("Insufficient Permission", "You don't have permssion to run this command."));
+		msg.channel.send(ErrorEmbed("Insufficient Permission", "You don't have permission  to run this command."));
 		return;
 	}
 

@@ -5,6 +5,8 @@ export interface GuildData {
 	ta_password?: string;
 	matchroomChannels?: string[];
 	guildId?: string;
+	lobbyVC?: string;
+	qualsChannel?: string;
 }
 
 async function Set(id: string, data: GuildData) {

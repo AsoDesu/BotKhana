@@ -10,11 +10,12 @@ import {
 	PlayerCompleted,
 	PlayerConnect,
 	PlayerDisconnect,
+	QualiferResultPacket,
 	UpdatePacket,
 } from "./Types/EventTypes";
 import ConnectCoordinator from "./Packets/ConnectCoordinator";
 import DisconnectCoordinatorPacket from "./Packets/DisconnectCoordinator";
-import { Coordinator, Match, Player, PlayerData, ServerState } from "./Types/Types";
+import { Coordinator, Match, Player, PlayerData, Score, ServerState } from "./Types/Types";
 import VersionInfo from "./VersionInfo";
 
 class Client extends EventEmitter {
@@ -69,7 +70,6 @@ class Client extends EventEmitter {
 				return;
 			}
 			if (message.From != "00000000-0000-0000-0000-000000000000") return;
-
 			switch (message.Type) {
 				case 3:
 					let data = message as CoordinatorResponse;
@@ -85,10 +85,13 @@ class Client extends EventEmitter {
 					this.ServerName = data.SpecificPacket.State.ServerSettings.ServerName;
 
 					this.emit("connect", data.SpecificPacket);
+					this.Disconnect(true);
 					return;
 				case 4:
 					this.UpdatePacket(message as UpdatePacket);
 					return;
+				case 15:
+					this.emit("qualifers_submit", (message as QualiferResultPacket).SpecificPacket.Score);
 			}
 		});
 	}
@@ -99,7 +102,7 @@ class Client extends EventEmitter {
 		return 1;
 	}
 
-	public Disconnect() {
+	public Disconnect(keepws?: boolean) {
 		this.Coordinators.forEach((c) => {
 			if (c.Name.includes("BotKhana")) {
 				this.Send(
@@ -111,7 +114,7 @@ class Client extends EventEmitter {
 				);
 			}
 		});
-
+		if (keepws) return;
 		this.ws.close();
 	}
 
@@ -257,6 +260,7 @@ class Client extends EventEmitter {
 			match.Players.forEach((p) => {
 				this.PlayerUncomplete(p);
 			});
+			MatchCompletedPlayers = 0;
 		}
 	}
 
@@ -271,6 +275,11 @@ class Client extends EventEmitter {
 		let match = this.Matches.find((m) => m.Players.findIndex((p) => p.Id == player.Id) != -1);
 		if (match) return match;
 		return null;
+	}
+
+	// Inject Packet
+	public InjectPacket(packet: string) {
+		this.ws.emit("message", packet);
 	}
 
 	// Error Types
@@ -298,6 +307,8 @@ declare interface Client {
 
 	on(event: "coordinator_connect", listener: (coordinator: Coordinator) => void): this;
 	on(event: "coordinator_disconnect", listener: (coordinator: Coordinator) => void): this;
+
+	on(event: "qualifers_submit", listener: (score: Score) => void): this;
 }
 
 export default Client;
