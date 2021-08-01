@@ -75,7 +75,7 @@ async function AddRole(Member: GuildMember, RoleId: string) {
 
 	if (Member.roles.cache.has(Role.id)) return 0;
 	Member.roles.add(Role);
-	return;
+	return 1;
 }
 
 async function SendSignupEmbed(TournamentData: TournamentData, Member: User, Guild: Guild, signup: newParticipant) {
