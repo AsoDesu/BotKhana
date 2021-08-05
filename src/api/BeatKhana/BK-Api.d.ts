@@ -147,3 +147,7 @@ export interface BracketUpdatePayload {
 	p1Score: string | number;
 	p2Score: string | number;
 }
+
+export interface DirectUser extends user {
+	tournaments: string[];
+}

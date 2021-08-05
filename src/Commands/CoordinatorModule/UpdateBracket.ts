@@ -18,10 +18,10 @@ class Update extends BaseCommand {
 		if (!Bracket) return ErrorEmbed("Bracket Not Found", "Couldn't get the bracket for the tournament linked to this server.");
 
 		// Get the target user from the first argument, if it's a Discord User, remove the fancy discord ping stuff
-		let TargetUser = args[0].replace(/(<|@|>)/g, "");
+		let TargetUser = args[0].replace(/(<|@|>|!)/g, "");
 		// Get the matches of the specified user, remove any that are already completed, or that don't have a second player
 		// If there are more than 1, Send an error
-		let Matches = Bracket.filter((m) => m.p1.id && m.p2.id && (LowerCase(m.p1.id) == TargetUser || LowerCase(m.p2.id) == TargetUser));
+		let Matches = Bracket.filter((m) => m.status != "complete" && m.p1.id && m.p2.id && (LowerCase(m.p1.id) == TargetUser || LowerCase(m.p2.id) == TargetUser));
 		if (Matches.length > 1) {
 			//return ErrorEmbed("Multiple Matches", "There are multiple matches going on with that user");
 		} else if (Matches.length == 0) {
@@ -59,6 +59,7 @@ class Update extends BaseCommand {
 	aliases = ["updatebracket"];
 	Args = ["(User)", "(Score)"];
 	RequiredPermission = "MUTE_MEMBERS" as PermissionResolvable;
+	description = "Updates the linked BeatKhana bracket";
 }
 
 function LowerCase(x: string) {
