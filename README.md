@@ -35,6 +35,15 @@ Don't include the brackets/square brackets when running the command
 -   `faq` - Additional help for certain common errors
 -   `invite` - Get the BotKhana invite link along with the support discord
 -   `map/bs/bsr (map key) [(difficulty)]` - Get map data from [beatsaver.com](https://beatsaver.com)
+-   `tournament/t` - Get info on the linked tournament
+-   `user (@User)` - Get info on a user from BeatKhana.com
+
+#### Tournament Assistant
+
+-   `setquals/setqualschannel (Channel)` - Set the channel where qualifer results will be sent
+-   `connect (IP:PORT) [(Password)]` - Connect a TA server to your discord
+-   `disconnect` - Disconnect TA from your discord
+-   `reconnect` - Reconnect TA to your discord (if TA server crashed)
 
 ##### BeatKhana
 
