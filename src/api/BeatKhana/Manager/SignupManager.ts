@@ -153,7 +153,6 @@ async function SyncAll(Guild: Guild, TournamentData: TournamentData) {
 		if (!Member) return;
 
 		if ((await AddRole(Member, TournamentData.signupRole)) != 1) {
-			Log(`Didn't give ${p.name} signup role.`, __filename);
 			return;
 		}
 

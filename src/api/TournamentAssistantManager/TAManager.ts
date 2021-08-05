@@ -9,16 +9,16 @@ import BKApi from "../BeatKhana/BK-Api";
 import Client from "../TournamentAssistant/Client";
 import DiscordClient from "../../index";
 import { Coordinator, Match, Player, Score } from "../TournamentAssistant/Types/Types";
-import BeatSaver from "../../Commands/InfoModule/BeatSaver";
 import { numberWithCommas } from "../../Utils/NumberWithCommas";
-import { BeatSaverSong } from "beatsaver-api/lib/types/BeatSaverSong";
+import { BeatSaverMap, VersionsEntity } from "../BeatSaver/Types";
+import BeatSaverClient from "../BeatSaver/BeatSaverClient";
 
 class TAManager {
 	public Client: Client;
 	public Guild: Guild;
 
 	public LinkedCoordinators: LinkedCoordinator[] = [];
-	public MapCache: BeatSaverSong[] = [];
+	public MapCache: VersionsEntity[] = [];
 
 	constructor(ip: string, password: string, Guild: Guild) {
 		this.Client = new Client(ip, password);
@@ -192,16 +192,18 @@ class TAManager {
 		let Beatmap = this.MapCache.find((m) => m.hash == hash);
 		if (!Beatmap) {
 			try {
-				Beatmap = await BeatSaver.bs.getMapDetailsByHash(hash);
+				let res = await BeatSaverClient.getMapFromHash(hash);
+				Beatmap = res.versions[res.versions.length - 1];
 			} catch {
 				return;
 			}
+			this.MapCache.push(Beatmap);
 		}
-
 		// Code taken from https://github.com/AsoDesu/QualsWebsite/blob/main/js/src/index.ts
-		let notes = Beatmap.metadata.characteristics.find((c) => c.name == Score.Parameters.Beatmap.Characteristic.SerializedName).difficulties[
-			this.difficulty(Score.Parameters.Beatmap.Difficulty)
-		].notes;
+		// And modified to work with new BS Api - 05/08/21
+		let notes = Beatmap.diffs.find(
+			(c) => c.characteristic == Score.Parameters.Beatmap.Characteristic.SerializedName && c.difficulty == this.difficulty(Score.Parameters.Beatmap.Difficulty)
+		).notes;
 		// Calculate max score, thanks to.. someone from unnamed events for this formula!!
 		let maxscore = (notes - 13) * 920 + 4715;
 
@@ -223,15 +225,15 @@ class TAManager {
 	private difficulty(x: number) {
 		switch (x) {
 			case 0:
-				return "easy";
+				return "Easy";
 			case 1:
-				return "normal";
+				return "Normal";
 			case 2:
-				return "hard";
+				return "Hard";
 			case 3:
-				return "expert";
+				return "Expert";
 			case 4:
-				return "expertPlus";
+				return "ExpertPlus";
 		}
 	}
 

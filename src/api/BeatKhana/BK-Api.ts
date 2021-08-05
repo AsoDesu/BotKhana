@@ -36,11 +36,13 @@ class BeatKhanaApi {
 	}
 
 	public async User(id: string) {
-		var res = await got(`https://beatkhana.com/api/user/${id}`).catch(() => {
-			return { body: null };
-		});
-		if (res.body == null) return null;
-		return JSON.parse(res.body) as types.user;
+		try {
+			let res = await got(`https://beatkhana.com/api/user/${id}`);
+			if (res.body == null) return null;
+			return JSON.parse(res.body) as types.DirectUser;
+		} catch {
+			return null;
+		}
 	}
 
 	public async MapPool(id: string) {
