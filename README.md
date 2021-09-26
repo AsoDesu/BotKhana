@@ -6,7 +6,7 @@ A Beat Saber Tournament Manager and Coordinator Bot
 
 ![size](https://img.shields.io/github/repo-size/AsoDesu/BotKhana)
 
-[Invite Link](https://discord.com/api/oauth2/authorize?client_id=796371697083219968&permissions=298265712&scope=bot)
+[Invite Link](https://discord.com/api/oauth2/authorize?client_id=796371697083219968&permissions=8&scope=bot)
 [Support Server](https://discord.gg/jEHVQajmS4)
 [Trello](https://trello.com/b/8kefuCCH/botkhana-development)
 
