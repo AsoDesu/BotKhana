@@ -7,6 +7,7 @@ export interface GuildData {
 	guildId?: string;
 	lobbyVC?: string;
 	qualsChannel?: string;
+	nekos?: boolean;
 }
 
 async function Set(id: string, data: GuildData) {

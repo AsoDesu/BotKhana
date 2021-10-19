@@ -104,7 +104,8 @@ async function SendSignupEmbed(TournamentData: TournamentData, Member: User, Gui
 			thumbnail: {
 				url: Member.avatarURL({ dynamic: true }),
 			},
-			color: "e642f5",
+			color: "e970f5",
+			url: `https://beatkhana.com/tournament/${TournamentData.tournamentId}/participants`,
 		})
 	);
 }
