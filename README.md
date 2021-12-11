@@ -1,5 +1,9 @@
 # BotKhana
 
+## This project has been abandoned.. 
+## If you would like to continue development on this project, DM me on discord!
+### Aso#1357
+
 A Beat Saber Tournament Manager and Coordinator Bot
 
 ###### BotKhana is not affiliated with BeatKhana.
